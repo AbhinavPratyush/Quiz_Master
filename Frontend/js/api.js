@@ -253,12 +253,18 @@ startAttempt: (quizId) =>
       // PREVIOUS ATTEMPT HISTORY
       // POST /user/{attemptID}
       // -----------------------------------------------------
-
       history: (attemptId) =>
         jsonPost(
           config.userBaseUrl,
           `/user/${encodeURIComponent(attemptId)}`,
           attemptId
+        ),
+
+      attempts: () =>
+        jsonPost(
+          config.userBaseUrl,
+          '/user/history',
+          null
         )
     },
 

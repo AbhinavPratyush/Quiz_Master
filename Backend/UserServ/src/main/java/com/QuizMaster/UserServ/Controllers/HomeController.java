@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +61,7 @@ public class HomeController {
     AttemptServiceDB attemptServiceDB;
     @Autowired
     SecurityService securityService;
-    @PostMapping("/user/attempts")
+    @PostMapping("/user/history")
     public List<AttemptDTO> userAttempts() {
         return attemptServiceDB.loadAttempts(
                 securityService.getCurrentUserId()
@@ -108,4 +109,18 @@ public class HomeController {
     public void newUser(@RequestBody User newUser){
         userRepository.save(newUser);
     }
+
+
+
+    //---------------Deleting service--------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
 }

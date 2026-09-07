@@ -28,6 +28,11 @@ public interface QuestionRepository extends JpaRepository<Question,Long> {
     """,
             nativeQuery = true)
     List<Question> questionPool(@Param("q") Long quizID);
+
+
+
+
+
     @Query(value = """
     SELECT
         q.questionid,

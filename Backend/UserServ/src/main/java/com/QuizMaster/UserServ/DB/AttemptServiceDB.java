@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,17 +31,23 @@ public class AttemptServiceDB {
 
     public List<AttemptDTO> loadAttempts(String userId) {
 
-        List<Object[]> rows = attemptRepo.loadAttempts(userId);
+        List<PreviousAttemptsProjection> rows = attemptRepo.loadAttempts(userId);
+        List<AttemptDTO> send=new ArrayList<>();
+        for(PreviousAttemptsProjection row:rows){
 
-        return rows.stream()
-                .map(row -> new AttemptDTO(
-                        ((Number) row[0]).longValue(),      // attemptID
-                        ((Number) row[1]).intValue(),       // score
-                        (Boolean) row[2],                   // completed
-                        row[3] == null ? null :
-                                (Instant) row[3],
-                        ((Number) row[4]).intValue()        // timeLimit
-                ))
-                .toList();
+            AttemptDTO a=new AttemptDTO(
+                    row.getAttemptId(),
+                    row.getScore(),
+                    row.getHasSubmitted(),
+                    row.getStartedAt(),
+                    row.getTimeLimit()
+            );
+            System.out.println(row.getAttemptId()+"is created");
+            send.add(a);
+        }
+
+        return send;
+
+
     }
 }

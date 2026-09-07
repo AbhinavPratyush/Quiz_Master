@@ -19,7 +19,6 @@ public class Attempt {
     Boolean hasSubmitted=false;
     int idle;//in minutes
     int seed;//value of range(1,24)
-
     private Instant startedAt;
 
     @PrePersist

@@ -1,6 +1,7 @@
 package com.QuizMaster.AdminServ.DBCalls;
 
 import com.QuizMaster.AdminServ.Quizs.Quiz;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,11 @@ public class QuizServiceDB {
 
     public List<Quiz> loadTen(){
         return quizRepository.loadTen();
+    }
+
+    @Transactional
+    public void delete(Long quizID){
+        quizRepository.stopThisQuiz(quizID);
     }
 
 }

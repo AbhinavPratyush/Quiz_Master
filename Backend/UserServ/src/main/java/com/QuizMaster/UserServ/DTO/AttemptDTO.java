@@ -17,6 +17,17 @@ public class AttemptDTO {
     Instant startedAt;
     int timeLimit;
 
+    @Override
+    public String toString() {
+        return "AttemptDTO{" +
+                "attemptID=" + attemptID +
+                ", score=" + score +
+                ", completedQuiz=" + completedQuiz +
+                ", startedAt=" + startedAt +
+                ", timeLimit=" + timeLimit +
+                '}';
+    }
+
     public AttemptDTO(long attemptID, int score, boolean completedQuiz, Instant startedAt, int timeLimit) {
         this.attemptID = attemptID;
         this.score = score;

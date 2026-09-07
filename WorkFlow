@@ -43,7 +43,7 @@ Api:
         expects-nothing
         returns-listOf(quiz), order by Latest creation, 10 at max
 
-7.@PostMapping("/admin/{quizID}")
+7.@PostMapping("/admin/quiz/{quizID}")
         expects-quizID
         return-ListOf(AttemptDTO), order by recents
         AttemptDTO{
@@ -52,9 +52,23 @@ Api:
                 boolean completedQuiz;
         }
 
-8.@PostMapping("/admin/{attemptID}")
+8.@PostMapping("/admin/attempt/{attemptID}")
         excepts- attemptID
-        return-listOf(questions), questions grouped by attemptID
+        return- List<QuestionPreviousDTO>, questions grouped by attemptID
+        QuestionPreviousDTO{
+         long questionID;
+
+            String topicId;
+            String question;
+            String option1;
+            String option2;
+            String option3;
+            String option4;
+            Boolean isMCQ=true;
+            Integer correct;
+            Integer seed;
+            }
+
 
 9.@PostMapping("/user/dashboard")
         expects-nothing
@@ -74,6 +88,18 @@ Api:
         excepts- attemptID
         return-listOf(questions), questions grouped by attemptID
 
+
+12. @PostMapping("/admin/delete/quiz/{quizID}")
+        expects- quizID
+        returns- void/Response Entity for the status code
+
+13. @PostMapping("/admin/delete/question/{questionID}")
+        expects- questionID
+        returns- void/response Entity with status code
+
+14.@PostMapping("/admin/view/Questions/{topicID}")
+        expects- topicID
+        returns List<Questions>
 
 Entity:
 1. Question

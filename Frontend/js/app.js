@@ -255,10 +255,83 @@
   }
 
   async function userHistory() {
-    app.innerHTML = shell(`<main class="page"><div class="hero"><span class="badge">History</span><h1>Previous attempts</h1><p class="muted">Scores and question papers from completed attempts.</p></div><div id="content" class="loading">Select an attempt from the dashboard data.</div></main>`, 'QuizMaster', '<button class="btn btn-ghost" data-action="user-dashboard">Back</button>');
-    // There is no user-wide history endpoint in the current repository/API.
-    document.getElementById('content').innerHTML = `<div class="card error-box">The supplied API contract provides <code>POST /user/{attemptID}</code> for an individual attempt, but no endpoint that lists the current user's attempts. Add that list endpoint before this screen can populate automatically.</div>`;
+
+  app.innerHTML = shell(
+    `<main class="page">
+      <div class="hero">
+        <span class="badge">History</span>
+        <h1>Previous attempts</h1>
+        <p class="muted">
+          Scores and question papers from your previous attempts.
+        </p>
+      </div>
+
+      <div id="content" class="loading">
+        Loading attempts…
+      </div>
+    </main>`,
+    'QuizMaster',
+    '<button class="btn btn-ghost" data-action="user-dashboard">Back</button>'
+  );
+
+  try {
+
+    const attempts = await API.user.attempts();
+
+    const arr = Array.isArray(attempts)
+      ? attempts
+      : [];
+
+    if (!arr.length) {
+
+      document.getElementById('content').innerHTML =
+        '<div class="card empty">No previous attempts found.</div>';
+
+      return;
+    }
+
+    document.getElementById('content').innerHTML = `
+      <div class="card">
+
+        ${arr.map(a => `
+          <div class="attempt-item">
+
+            <div>
+              <strong>
+                Attempt #${esc(a.attemptID)}
+              </strong>
+
+              <div class="muted">
+                ${a.completedQuiz
+                  ? 'Completed'
+                  : 'In progress'}
+              </div>
+            </div>
+
+            <div>
+              <strong>
+                Score: ${esc(a.score ?? 0)}
+              </strong>
+            </div>
+
+            <button
+              class="btn btn-secondary"
+              data-user-attempt-id="${esc(a.attemptID)}">
+              View paper
+            </button>
+
+          </div>
+        `).join('')}
+
+      </div>
+    `;
+
+  } catch (e) {
+
+    document.getElementById('content').innerHTML =
+      `<div class="error-box">${esc(errorText(e))}</div>`;
   }
+}
 
   function renderHistoryQuestions(questions, seed) {
     const arr = Array.isArray(questions) ? questions : [];
@@ -363,6 +436,35 @@
     if (adminQuiz) { state.selectedQuiz = state.adminQuizzes[Number(adminQuiz.dataset.adminQuizIndex)]; go('/admin/attempts'); return; }
     const option = e.target.closest('[data-option-index]');
     if (option) { state.selectedViewIndex = Number(option.dataset.optionIndex); renderAssessment(); return; }
+   const userAttempt = e.target.closest('[data-user-attempt-id]');
+
+if (userAttempt) {
+    state.attemptId =
+        Number(userAttempt.dataset.userAttemptId);
+
+    // For now we'll load the individual attempt directly.
+    const questions = await API.user.history(state.attemptId);
+
+    app.innerHTML = shell(
+        `<main class="page narrow">
+            <div class="hero">
+                <span class="badge">
+                    Attempt #${esc(state.attemptId)}
+                </span>
+                <h1>Attempt paper</h1>
+                <p class="muted">Your submitted answers.</p>
+            </div>
+            <div class="card">
+                ${renderHistoryQuestions(questions)}
+            </div>
+        </main>`,
+        'QuizMaster',
+        '<button class="btn btn-ghost" data-action="user-history">Back</button>'
+    );
+
+    return;
+}
+
     const attempt = e.target.closest('[data-attempt-id]');
     if (attempt) { state.attemptId = Number(attempt.dataset.attemptId); go('/admin/attempt'); return; }
     const action = e.target.closest('[data-action]')?.dataset.action;

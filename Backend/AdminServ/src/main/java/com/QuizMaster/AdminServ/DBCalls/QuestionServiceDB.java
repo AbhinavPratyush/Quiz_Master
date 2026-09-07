@@ -2,6 +2,7 @@ package com.QuizMaster.AdminServ.DBCalls;
 
 import com.QuizMaster.AdminServ.Questions.Question;
 import com.QuizMaster.AdminServ.Quizs.Quiz;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,5 +26,8 @@ public class QuestionServiceDB {
     }
 
 
-
+    @Transactional
+    public void delete(Long questionID) {
+        questionRepo.stopThisQuestion(questionID);
+    }
 }

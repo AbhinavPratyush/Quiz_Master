@@ -45,41 +45,41 @@ public interface AttemptRepository extends JpaRepository<Attempt,Long> {
     );
 
     @Query(value = """
-    SELECT
-        a.attemptid,
-        COALESCE(
-            SUM(
-                CASE
-                    WHEN h.solved = true AND h.answer = qn.correct
-                        THEN q.correct
-                    WHEN h.solved = true
-                        THEN q.wrong
-                    ELSE
-                        q.not_attended
-                END
-            ),
-            0
-        ) AS score,
-        a.has_submitted,
-        a.started_at,
-        q.time_limit
-    FROM attempt a
-    JOIN quiz q
-        ON a.quizid = q.quizid
-    LEFT JOIN history h
-        ON a.attemptid = h.attemptid
-    LEFT JOIN question qn
-        ON h.questionid = qn.questionid
-    WHERE a.userid = :userId
-    GROUP BY
-        a.attemptid,
-        a.has_submitted,
-        a.started_at,
-        q.time_limit
-    ORDER BY a.started_at DESC
+            SELECT
+                                                      a.attemptid,
+                                                      COALESCE(
+                                                          SUM(
+                                                              CASE
+                                                                  WHEN h.solved = true AND h.answer = qn.correct THEN q.correct                                                      WHEN h.solved = true THEN q.wrong
+                                                                  ELSE q.not_attended
+                                                              END
+                                                          ),
+                                                          0
+                                                      ) AS score,
+                                                      a.has_submitted,
+                                                      a.started_at,
+                                                      q.time_limit
+                                                  FROM attempt a
+                                                  JOIN quiz q
+                                                      ON a.quizid = q.quizid
+                                                  LEFT JOIN history h
+                                                      ON a.attemptid = h.attemptid
+                                                  LEFT JOIN question qn
+                                                      ON h.questionid = qn.questionid
+                                                  WHERE a.userid = :userId
+                                                  GROUP BY
+                                                      a.attemptid,
+                                                      a.has_submitted,
+                                                      a.started_at,
+                                                      q.time_limit,
+                                                      q.correct,       
+                                                      q.wrong,         
+                                                      q.not_attended   
+                                                  ORDER BY a.started_at DESC;
+                        
     """,
             nativeQuery = true)
-    List<Object[]> loadAttempts(@Param("userId") String userId);
+    List<PreviousAttemptsProjection> loadAttempts(@Param("userId") String userId);
 
     @Modifying
     @Query(value = """
