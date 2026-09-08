@@ -2,6 +2,7 @@ package com.QuizMaster.UserServ.DB;
 
 import com.QuizMaster.UserServ.DTO.QuestionDTO;
 import com.QuizMaster.UserServ.Questions.Question;
+import com.QuizMaster.UserServ.ToDo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -57,5 +58,16 @@ public interface QuestionRepository extends JpaRepository<Question,Long> {
     """,
             nativeQuery = true)
     List<Object[]> nextQuestion(@Param("a") Long attemptID);
+
+
+
+    @ToDo(what = """
+            Write the query to return the questions , chosen option,
+            seed associated with attempt,options, sorted by seq.
+            """)
+    @Query(value= """
+            
+            """,nativeQuery = true)
+    List<QuestionProjection> load(@Param("a") Long attemptID);
 
 }

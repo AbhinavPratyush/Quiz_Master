@@ -101,6 +101,8 @@ Api:
         expects- topicID
         returns List<Questions>
 
+15.
+
 Entity:
 1. Question
             long questionID;
@@ -137,6 +139,10 @@ Entity:
                 boolean solved;
                 int answer;// range 1,4 inclusive
                 int seq;//during saving this i will store the sequence
+
+5.Users
+                String userID
+                String password
 
 Exceptions:
 1. CannotCreateTransactionException.class = for transactional

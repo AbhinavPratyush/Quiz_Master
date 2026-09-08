@@ -15,4 +15,8 @@ public class QuestionServiceDB {
         return questionRepository.questionPool(quizID);
     }
 
+    public List<AttemptedQuestionDTO> getPrevQuestions(Long attemptID){
+
+        return null;
+    }
 }
