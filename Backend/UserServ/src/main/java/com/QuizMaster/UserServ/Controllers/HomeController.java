@@ -8,6 +8,7 @@ import com.QuizMaster.UserServ.DB.AttemptServiceDB;
 import com.QuizMaster.UserServ.DB.QuestionServiceDB;
 import com.QuizMaster.UserServ.DB.QuizRepositories;
 import com.QuizMaster.UserServ.DTO.AttemptDTO;
+import com.QuizMaster.UserServ.DTO.AttemptedQuestionDTO;
 import com.QuizMaster.UserServ.DTO.QuestionDTO;
 import com.QuizMaster.UserServ.Job;
 import com.QuizMaster.UserServ.Questions.Question;
@@ -16,6 +17,7 @@ import com.QuizMaster.UserServ.Services.AttemptService;
 import com.QuizMaster.UserServ.Services.QuizService;
 import com.QuizMaster.UserServ.Services.SavingService;
 import com.QuizMaster.UserServ.Services.SendingNextQuestionService;
+import com.QuizMaster.UserServ.ToDo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -145,11 +147,15 @@ public class HomeController {
         This is supposed to load the attempted question,
          and the answer selected.
         """)
+    @ToDo(what= """
+            non existent end frontend api caller
+            and sql query is not written yet
+            """)
     @Autowired
     QuestionServiceDB qsdb;
     @PostMapping("/user/attempt/history/{attemptID}")
     public List<AttemptedQuestionDTO> load(@PathVariable Long attemptID){
-        return qsdb.getPrevQuestions();
+        return qsdb.getPrevQuestions(attemptID);
     }
 
 

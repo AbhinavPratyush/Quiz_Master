@@ -62,8 +62,24 @@ public interface QuestionRepository extends JpaRepository<Question,Long> {
 
 
     @ToDo(what = """
-            Write the query to return the questions , chosen option,
-            seed associated with attempt,options, sorted by seq.
+            SELECT
+                                                                        q.questionid AS questionID,
+                                                                        q.topic_id AS topicId,
+                                                                        q.question AS question,
+                                                                        q.option1 AS option1,
+                                                                        q.option2 AS option2,
+                                                                        q.option3 AS option3,
+                                                                        q.option4 AS option4,
+                                                                        q.ismcq AS isMCQ,
+                                                                        h.answer AS selectedAns,
+                                                                        a.seed AS seed
+                                                                    FROM history h
+                                                                    JOIN question q
+                                                                        ON h.questionid = q.questionid
+                                                                    JOIN attempt a
+                                                                        ON h.attemptid = a.attemptid
+                                                                    WHERE h.attemptid = :a
+                                                                    ORDER BY h.seq ASC
             """)
     @Query(value= """
             
