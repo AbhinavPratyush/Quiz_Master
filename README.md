@@ -22,7 +22,7 @@ How to Run
 
 Install Java 17 JDK and make sure it is available in your PATH.
 
-java -version
+java -version 21
 
 2. Start PostgreSQL
 
